@@ -53,7 +53,7 @@ struct TrackingNode {
 * key:person_id+time
 */
 struct BellEvent {
-    1:required  string  event,  // 事件类型 IN_EVENT OUT_EVENT POS_EVENT
+    1:required  string  event,  // 事件类型 IN_EVENT OUT_EVENT POS_EVENT CROSS_EVENT
 	2:required  i64    person_id,
 	3:required  i64    time,
 	4:required  string zone_name,
