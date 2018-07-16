@@ -21,8 +21,8 @@ namespace java org.hillinsight.thrift
 
 /**
 * 人员属性信息
-* 只有有效识别到人脸，才会生成该记录，使用identity关联到具体人员
-* key: identity
+* 有些厂商为保证实时性，进店时间和人员属性是分别推送的，所以出现了这个表
+* key: person_id+zone_name
 */
 struct PersonAttribute {
     1:required i64 person_id,  // 基于人脸的ID
@@ -33,12 +33,11 @@ struct PersonAttribute {
 
 /**
 * 根据tracking_id来判断是属于同一个track
-* identity 用来关联人脸
-* person_id 用来关联event
+* person_id 用来关联event表或attribute表
 * key: tracking_id +person_id +time
 */
 struct TrackingNode {
-    1:required i64 tracking_id,  // 当前轨迹ID
+    1:required i64 tracking_id,  // 当前轨迹ID 用来标记是否是一次进店的轨迹，用作算动线
     2:required i64 person_id,
     3:required i64 time,         // 时间，ms
     4:optional string identity,  // 内部键值，用来标识人脸身份 已废弃
@@ -50,7 +49,9 @@ struct TrackingNode {
 }
 
 /**
-* key:person_id+time
+* key:event+time+person_id+zone_name
+* 事件表 包括进店 出店 途径 收银台前出现
+* 如果事件发生时候属性未获取，可以利用attribute表再同步
 */
 struct BellEvent {
     1:required  string  event,  // 事件类型 IN_EVENT OUT_EVENT POS_EVENT CROSS_EVENT
