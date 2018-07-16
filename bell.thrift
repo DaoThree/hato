@@ -18,9 +18,12 @@
  */
 
 namespace java org.hillinsight.thrift
+/**
+* 该数据结构的required标记只作为key的标记(删除依据)，其他字段除说明外，都为必填 ·
+**/
 
 /**
-* 人员属性信息
+* 人员属性信息（可选）
 * 有些厂商为保证实时性，进店时间和人员属性是分别推送的，所以出现了这个表
 * key: person_id+zone_name
 */
@@ -45,7 +48,7 @@ struct TrackingNode {
     6:optional i32 y, //因暂时未二维坐标，该字段暂不用
     7:optional i32 z,
 	8:required string zone_name,   // 店名
-	9:optional i32 personType,       // 0 普通人  1 店员
+	9:optional i32 personType,       // 0 普通人  1 店员 因有的店铺未完成人脸和位置信息的融合，所以临时作为绘制热力图使用 非必填
 }
 
 /**
@@ -56,13 +59,13 @@ struct TrackingNode {
 struct BellEvent {
     1:required  string  event,  // 事件类型 IN_EVENT OUT_EVENT POS_EVENT CROSS_EVENT
 	2:required  i64    person_id,
-	3:required  i64    time,
+	3:required  i64    time, //ms
 	4:required  string zone_name,
-	5:optional  i32    age,
-	6:optional  i32    sex,  // 0:男  1:女
+	5:optional  i32    age, //如果需要写attribute表，可不填
+	6:optional  i32    sex,  // 0:男  1:女 如果需要写attribute表，可不填写
 	7:optional  string face_snap_img_url, //抓拍人脸图URL
-	8:optional  string face_matched_img_url,//匹配到的人脸图URL
- 	9:optional  string frame_snap_img_url //抓拍帧URL
+	8:optional  string face_matched_img_url,//匹配到的人脸图URL 非必填
+ 	9:optional  string frame_snap_img_url //抓拍帧URL 非必填
 }
 
 enum Status {
