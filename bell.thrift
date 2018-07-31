@@ -21,11 +21,14 @@
  # protocol请使用:TCompactProtocol
 */
 namespace java org.hillinsight.thrift
+/**
+* 该数据结构的required标记只作为key的标记(删除依据)，其他字段除说明外，都为必填 ·
+**/
 
 /**
-* 人员属性信息
-* 只有有效识别到人脸，才会生成该记录，使用identity关联到具体人员
-* key: identity
+* 人员属性信息（可选）
+* 有些厂商为保证实时性，进店时间和人员属性是分别推送的，所以出现了这个表
+* key: person_id+zone_name
 */
 struct PersonAttribute {
     1:required i64 person_id,  // 基于人脸的ID
@@ -36,12 +39,11 @@ struct PersonAttribute {
 
 /**
 * 根据tracking_id来判断是属于同一个track
-* identity 用来关联人脸
-* person_id 用来关联event
+* person_id 用来关联event表或attribute表
 * key: tracking_id +person_id +time
 */
 struct TrackingNode {
-    1:required i64 tracking_id,  // 当前轨迹ID
+    1:required i64 tracking_id,  // 当前轨迹ID 用来标记是否是一次进店的轨迹，用作算动线
     2:required i64 person_id,
     3:required i64 time,         // 时间，ms
     4:optional string identity,  // 内部键值，用来标识人脸身份 已废弃
@@ -49,22 +51,24 @@ struct TrackingNode {
     6:optional i32 y, //因暂时未二维坐标，该字段暂不用
     7:optional i32 z,
 	8:required string zone_name,   // 店名
-	9:optional i32 personType,       // 0 普通人  1 店员
+	9:optional i32 personType,       // 0 普通人  1 店员 因有的店铺未完成人脸和位置信息的融合，所以临时作为绘制热力图使用 非必填
 }
 
 /**
-* key:person_id+time
+* key:event+time+person_id+zone_name
+* 事件表 包括进店 出店 途径 收银台前出现
+* 如果事件发生时候属性未获取，可以利用attribute表再同步
 */
 struct BellEvent {
     1:required  string  event,  // 事件类型 IN_EVENT OUT_EVENT POS_EVENT CROSS_EVENT
 	2:required  i64    person_id,
-	3:required  i64    time,
+	3:required  i64    time, //ms
 	4:required  string zone_name,
-	5:optional  i32    age,
-	6:optional  i32    sex,  // 0:男  1:女
+	5:optional  i32    age, //如果需要写attribute表，可不填
+	6:optional  i32    sex,  // 0:男  1:女 如果需要写attribute表，可不填写
 	7:optional  string face_snap_img_url, //抓拍人脸图URL
-	8:optional  string face_matched_img_url,//匹配到的人脸图URL
- 	9:optional  string frame_snap_img_url //抓拍帧URL
+	8:optional  string face_matched_img_url,//匹配到的人脸图URL 非必填
+ 	9:optional  string frame_snap_img_url //抓拍帧URL 非必填
 }
 
 enum Status {
