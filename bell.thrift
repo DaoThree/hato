@@ -16,7 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
+/*
+ * transport请使用:TFramedTransport
+ # protocol请使用:TCompactProtocol
+*/
 namespace java org.hillinsight.thrift
 
 /**
