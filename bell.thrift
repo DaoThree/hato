@@ -16,7 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
+/*
+ * transport请使用:TFramedTransport
+ # protocol请使用:TCompactProtocol
+*/
 namespace java org.hillinsight.thrift
 /**
 * 该数据结构的required标记只作为key的标记(删除依据)，其他字段除说明外，都为必填 ·
