@@ -61,11 +61,12 @@ struct BellEvent {
 	2:required  i64    person_id,
 	3:required  i64    time, //ms
 	4:required  string zone_name,
-	5:optional  i32    age, //如果需要写attribute表，可不填
-	6:optional  i32    sex,  // 0:男  1:女 如果需要写attribute表，可不填写
+	5:optional  i32    age, // -1:未知 如果需要写attribute表，请填写-1
+	6:optional  i32    sex,  // -1:未知 0:男  1:女 如果需要写attribute表，请填写-1
 	7:optional  string face_snap_img_url, //抓拍人脸图URL
 	8:optional  string face_matched_img_url,//匹配到的人脸图URL 非必填
- 	9:optional  string frame_snap_img_url //抓拍帧URL 非必填
+ 	9:optional  string frame_snap_img_url, //抓拍帧URL 非必填
+    10:optional i32 camera_id //抓拍摄像头id 用作区分多店门的门店
 }
 
 enum Status {
